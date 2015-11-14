@@ -2,12 +2,6 @@ import json
 import urllib2
 
 APIKEY = ""
-'''
-STEAM_ID = ""
-GROUP_TYPE = ""
-GROUP_REQUEST = ""
-VNUM = ""
-'''
 
 def reloadSkeleton(STEAM_ID, STEAM_PLURAL, GROUP_TYPE, GROUP_REQUEST, VNUM, API_KEY=APIKEY):
 	fleshedurl = " http://api.steampowered.com/" + GROUP_TYPE + "/" + GROUP_REQUEST + "/" + VNUM + "/?key=" + API_KEY + "&" +STEAM_PLURAL+ "=" + STEAM_ID
@@ -42,6 +36,7 @@ def getSummaries(idlist,getGameName=False,getRealName=False,getCountry=False): #
 				#print name['personaname']
 				nameList.append(name['personaname'])
 	return nameList
-
-flist = getFriendList("76561198082757501")
-print getSummaries(flist,getGameName=True)
+#retrievs friend list of target
+flist = getFriendList("")
+#retrieves names of people on targets friend list
+#print getSummaries(flist,getGameName=True)
