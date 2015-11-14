@@ -16,16 +16,18 @@ def getFriendList(STMID):
 		op = urllib2.urlopen(url)
 		mess = op.read()
 		data = json.loads(mess)
-	except Error as e:
-		print e
 		
-	#iterates json for steamids
-	friendList = []
-	for friend in data["friendslist"]["friends"]:
-		friendList.append(str(friend["steamid"]))
-	return friendList
+		#iterates json for steamids
+		friendList = []
+		for friend in data["friendslist"]["friends"]:
+			friendList.append(str(friend["steamid"]))
+		return friendList
+	except Exception as e:
+		print 'something went wrong..\n'
+		print e
 	
-def getSummaries(idlist,getGameName=False,getRealName=False,getCountry=False,getClanId=False): #can be used to recieve info about friends
+	
+def getSummaries(idlist,getAllInfo=False,getGameName=False,getRealName=False,getCountry=False,getClanId=False): #can be used to recieve info about friends
 	nameList = []
 	rNameList = []
 	placeList = []
@@ -39,7 +41,9 @@ def getSummaries(idlist,getGameName=False,getRealName=False,getCountry=False,get
 		mess = op.read()
 		data = json.loads(mess)	
 		
-		print 'received data of ' + id 
+		#print data
+		#break
+		print 'gathering personal info for ' + id 
 		
 		#iterates json for ign
 		if getGameName:
@@ -68,10 +72,48 @@ def getSummaries(idlist,getGameName=False,getRealName=False,getCountry=False,get
 					clanList.append(clan['primaryclanid'])
 				except:
 					clanList.append("null")
+					
 	return nameList, rNameList, placeList, clanList
 
-flist = getFriendList(me)
+def getGames(idlist, getGamesAll=False,getGames=False,getGamesMeta=False,getGamesTotal=False):
+	totalgames = 0
+	gameDict = {}
+	for id in idlist:
+		#creates url for GetOwnedGames 
+		url = reloadSkeleton('IPlayerService','GetOwnedGames','v0001',APIKEY,'steamid',id) 
+		print url
+		op = urllib2.urlopen(url)
+		mess = op.read()
+		data = json.loads(mess)
+		
+		print 'gathering games for ' + id
+		
+		if getGamesMeta:
+			try:
+				for game in data['response']['games']:
+						gameDict[game['appid']] = game['playtime_forever']
+			except:
+				gameDict['all'] = 'null'
+		if getGamesTotal:
+			try:
+				totalgames = data['response']['game_count']
+			except:
+				return 0
+		
+	print totalgames
+	return gameDict
+
+def resolveGameName(gameDict):
+	for x in xrange(len(gameDict)):
+		#XML parsing this
+		###http://steamcommunity.com/profiles/76561198007457088/games/?tab=all&xml=1
+		pass
+
+flist = getFriendList(robwalker)
 
 #retrieves info on user based on steamid, accepts a list of steamid
 namelist,realnamelist,placelist,clanlist = getSummaries(flist,getGameName=True,getRealName=True,getCountry=True,getClanId=True)
-print namelist
+
+
+#retrieves games of user based on steam id, accepts a list of steamid
+gameDict = getGames(flist,getGamesTotal=True)
