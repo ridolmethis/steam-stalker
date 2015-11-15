@@ -2,7 +2,8 @@
 STEAM STALKER
 ================================
 
-Gather information on a steam user using the Steam API
+Gather information on a steam user using the Steam API, create a profile on them, set alerts on certain actions, etc
+Also check how often they appear on other websites, such as reddit, trading forums, etc
 
 TODO LIST
 ----------
